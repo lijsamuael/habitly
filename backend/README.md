@@ -6,3 +6,7 @@
 # to run using uv
 
     uvicorn app.main:app --reload
+
+
+# to get a hash string:
+    penssl rand -hex 32

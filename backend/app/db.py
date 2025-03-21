@@ -24,3 +24,7 @@ engine = create_engine(DATABASE_URL)
 #initializes the database by creating tables
 def init_db(session: Session) -> None:
     pass
+
+def get_session():
+    with Session(engine) as session:
+        yield session

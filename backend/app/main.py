@@ -1,10 +1,10 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-
-
+from app.routes import auth  # Ensure this import is correct
 
 app = FastAPI(
-    title="Habitly"
+    title="Habitly",
+    openapi_url="/api/v1/openapi.json",
 )
 
 # Enable CORS for PWA
@@ -12,7 +12,7 @@ origins = [
     "http://localhost:3000",
 ]
 
-#add cors middleware
+# Add CORS middleware
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
@@ -21,8 +21,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Include the auth router
+app.include_router(auth.router)
 
 @app.get("/")
 def read_root():
-    return {"Hello": "World"}
-
+    return {"message": "API is running"}
