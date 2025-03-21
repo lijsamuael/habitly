@@ -1,5 +1,5 @@
 from typing import Annotated
-from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from fastapi.security import OAuth2PasswordRequestForm
 from fastapi import APIRouter, Depends
 from app.models import Token, User, UserCreate, UserResponse
 from passlib.context import CryptContext
@@ -14,13 +14,6 @@ load_dotenv()
 ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES"))
 
 from app.utils import authenticate_user, create_access_token, get_password_hash
-
-
-
-# OAuth2 scheme
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
-
-
 
 
 router = APIRouter()
