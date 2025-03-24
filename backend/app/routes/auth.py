@@ -16,7 +16,7 @@ ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES"))
 from app.utils import authenticate_user, create_access_token, get_password_hash
 
 
-router = APIRouter()
+router = APIRouter( tags=["auth"])
 
 
 

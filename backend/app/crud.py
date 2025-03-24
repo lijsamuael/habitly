@@ -1,4 +1,4 @@
-from typing import Generic, Type, TypeVar, List, Optional, Dict, Any
+from typing import Generic, Type, TypeVar, List, Dict, Any
 from fastapi import HTTPException
 from sqlmodel import SQLModel, Session, select
 
