@@ -1,6 +1,6 @@
 from typing import Annotated
 from fastapi.security import OAuth2PasswordRequestForm
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, BackgroundTasks, Depends
 from app.models import Token, User, UserCreate, UserResponse
 from passlib.context import CryptContext
 from datetime import timedelta
@@ -9,11 +9,12 @@ from sqlmodel import Session, select
 from dotenv import load_dotenv
 import os
 
+
 load_dotenv()
 
 ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES"))
 
-from app.utils import authenticate_user, create_access_token, get_password_hash
+from app.utils import authenticate_user, create_access_token, get_password_hash, send_email
 
 
 router = APIRouter( tags=["auth"])
@@ -62,3 +63,24 @@ def create_user(
     session.commit()
     session.refresh(user)
     return user
+
+
+@router.post("/send-email-background")
+def send_email_background(
+    background_tasks: BackgroundTasks,
+    email_to: str,
+) -> dict:  
+    subject = "Welcome Message"
+    body = {"name": "Samuaek Ketema", "title": "Welcome to Habitly"}
+    body_str = f"""
+    <html>
+        <body>
+            <h1>{body['title']}</h1>
+            <p>Dear {body['name']},</p>
+            <p>Welcome to Habitly! We are excited to have you join us.</p>
+        </body>
+    </html>
+    """
+    send_email(background_tasks, subject, email_to, body_str)
+    return {"message": "Email sent successfully"}  
+
