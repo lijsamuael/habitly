@@ -1,3 +1,4 @@
+from datetime import datetime
 from pydantic import BaseModel
 from sqlmodel import SQLModel, Field
 
@@ -14,6 +15,15 @@ class Habit(SQLModel, table=True):
     name: str = Field(unique=True, index=True)
     description: str | None = None
     user_id: int = Field(foreign_key="user.id")
+    current_streak: int = Field(default=0)
+    max_streak: int = Field(default=0)
+    last_completed_date: datetime | None = None
+
+
+class Streak(SQLModel, table=True):
+    id: int = Field(default=None, primary_key=True)
+    habit_id: int = Field(foreign_key="habit.id")
+    date_completed: datetime
 
 
 class Token(BaseModel):
