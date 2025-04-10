@@ -124,3 +124,24 @@ def update_streak(habit: Habit, db: Session):
     except Exception as e:
         db.rollback()  # Rollback changes if an error occurs
         raise HTTPException(status_code=500, detail=f"Error updating streak: {str(e)}")
+
+
+def reset_missed_streaks():
+    """Check all habits and reset streaks if a day was missed"""
+    try:
+        today = date.today()
+        db = Session()
+        habits = db.exec(select(Habit)).all()
+        
+        for habit in habits:
+            if habit.last_completed_date:
+                days_since_last = (today - habit.last_completed_date.date()).days
+                if days_since_last > 1:  # More than one day missed
+                    habit.current_streak = 0
+                    db.add(habit)
+        
+        db.commit()
+        print("Daily streak reset check completed")
+    except Exception as e:
+        db.rollback()
+        print(f"Error in streak reset scheduler: {str(e)}")

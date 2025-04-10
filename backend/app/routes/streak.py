@@ -1,6 +1,4 @@
 from fastapi import APIRouter, HTTPException
-from sqlalchemy.orm import session
-from sqlmodel import Session
 from sqlmodel import select
 from app.db import SessionDep
 from app.crud import CRUDBase
