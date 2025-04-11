@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta, timezone, date
 from passlib.context import CryptContext
 import jwt
 import os
@@ -126,11 +126,10 @@ def update_streak(habit: Habit, db: Session):
         raise HTTPException(status_code=500, detail=f"Error updating streak: {str(e)}")
 
 
-def reset_missed_streaks():
+def reset_missed_streaks(db: Session):
     """Check all habits and reset streaks if a day was missed"""
     try:
         today = date.today()
-        db = Session()
         habits = db.exec(select(Habit)).all()
         
         for habit in habits:
