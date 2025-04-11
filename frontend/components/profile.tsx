@@ -1,68 +1,73 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import { useHabits } from "@/contexts/habit-context"
-import { calculateStreak } from "@/lib/utils"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { format } from "date-fns"
-import { Flame, Award, Calendar, TrendingUp, BarChart } from "lucide-react"
-import { InstallApp } from "./install-app"
+import { useState, useEffect } from "react";
+import { useHabits } from "@/contexts/habit-context";
+import { calculateStreak } from "@/lib/utils";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { format } from "date-fns";
+import { Flame, Award, Calendar, TrendingUp, BarChart } from "lucide-react";
+import { InstallApp } from "./install-app";
 
 export function Profile() {
-  const { habits } = useHabits()
-  const [totalCompletions, setTotalCompletions] = useState(0)
-  const [longestStreak, setLongestStreak] = useState(0)
-  const [currentStreak, setCurrentStreak] = useState(0)
-  const [completionsByMonth, setCompletionsByMonth] = useState<{ [key: string]: number }>({})
-  const [topHabit, setTopHabit] = useState<string | null>(null)
+  const { habits } = useHabits();
+  const [totalCompletions, setTotalCompletions] = useState(0);
+  const [longestStreak, setLongestStreak] = useState(0);
+  const [currentStreak, setCurrentStreak] = useState(0);
+  const [completionsByMonth, setCompletionsByMonth] = useState<{
+    [key: string]: number;
+  }>({});
+  const [topHabit, setTopHabit] = useState<string | null>(null);
 
   useEffect(() => {
     // Calculate total completions
-    const total = habits.reduce((sum, habit) => sum + habit.completions.length, 0)
-    setTotalCompletions(total)
+    const total = habits.reduce(
+      (sum, habit) => sum + habit.completions.length,
+      0
+    );
+    setTotalCompletions(total);
 
     // Calculate longest streak across all habits
-    let maxStreak = 0
-    let maxCurrentStreak = 0
+    let maxStreak = 0;
+    let maxCurrentStreak = 0;
     habits.forEach((habit) => {
-      const streak = calculateStreak(habit)
+      const streak = calculateStreak(habit);
       if (streak.longest > maxStreak) {
-        maxStreak = streak.longest
+        maxStreak = streak.longest;
       }
       if (streak.current > maxCurrentStreak) {
-        maxCurrentStreak = streak.current
+        maxCurrentStreak = streak.current;
       }
-    })
-    setLongestStreak(maxStreak)
-    setCurrentStreak(maxCurrentStreak)
+    });
+    setLongestStreak(maxStreak);
+    setCurrentStreak(maxCurrentStreak);
 
     // Calculate completions by month
-    const monthlyData: { [key: string]: number } = {}
+    const monthlyData: { [key: string]: number } = {};
     habits.forEach((habit) => {
       habit.completions.forEach((date) => {
-        const month = date.substring(0, 7) // YYYY-MM format
-        monthlyData[month] = (monthlyData[month] || 0) + 1
-      })
-    })
-    setCompletionsByMonth(monthlyData)
+        const month = date.substring(0, 7); // YYYY-MM format
+        monthlyData[month] = (monthlyData[month] || 0) + 1;
+      });
+    });
+    setCompletionsByMonth(monthlyData);
 
     // Find top habit
     if (habits.length > 0) {
       const habitWithMostCompletions = habits.reduce((prev, current) =>
-        prev.completions.length > current.completions.length ? prev : current,
-      )
-      setTopHabit(habitWithMostCompletions.name)
+        prev.completions.length > current.completions.length ? prev : current
+      );
+      setTopHabit(habitWithMostCompletions.name);
     } else {
-      setTopHabit(null)
+      setTopHabit(null);
     }
-  }, [habits])
+  }, [habits]);
 
   // Get months for chart
-  const months = Object.keys(completionsByMonth).sort()
-  const monthlyValues = months.map((month) => completionsByMonth[month])
+  const months = Object.keys(completionsByMonth).sort();
+  const monthlyValues = months.map((month) => completionsByMonth[month]);
 
   return (
-    <div className="p-4 pb-20">
+    <div className="p-4 pb-20 max-w-4xl mx-auto">
       <div className="mb-6">
         <h1 className="text-2xl font-bold">Profile & Statistics</h1>
         <p className="text-gray-400">Track your overall habit progress</p>
@@ -74,7 +79,9 @@ export function Profile() {
             <div className="rounded-full bg-purple-500/20 p-3 mb-2">
               <Calendar className="h-6 w-6 text-purple-400" />
             </div>
-            <div className="text-3xl font-bold text-purple-300">{totalCompletions}</div>
+            <div className="text-3xl font-bold text-purple-300">
+              {totalCompletions}
+            </div>
             <p className="text-purple-400 text-sm">Total Completions</p>
           </CardContent>
         </Card>
@@ -84,7 +91,9 @@ export function Profile() {
             <div className="rounded-full bg-orange-500/20 p-3 mb-2">
               <Flame className="h-6 w-6 text-orange-400" />
             </div>
-            <div className="text-3xl font-bold text-orange-300">{longestStreak}</div>
+            <div className="text-3xl font-bold text-orange-300">
+              {longestStreak}
+            </div>
             <p className="text-orange-400 text-sm">Longest Streak</p>
           </CardContent>
         </Card>
@@ -108,7 +117,11 @@ export function Profile() {
 
             <div className="flex flex-col items-center">
               <div className="text-2xl font-bold">
-                {habits.filter((h) => h.completions.includes(format(new Date(), "yyyy-MM-dd"))).length}
+                {
+                  habits.filter((h) =>
+                    h.completions.includes(format(new Date(), "yyyy-MM-dd"))
+                  ).length
+                }
               </div>
               <p className="text-sm text-gray-400">Today's Habits</p>
             </div>
@@ -127,15 +140,24 @@ export function Profile() {
                 <div key={index} className="flex flex-col items-center w-full">
                   <div
                     className="w-full max-w-[30px] bg-purple-500 rounded-t-sm"
-                    style={{ height: `${Math.min((value / Math.max(...monthlyValues)) * 100, 100)}%` }}
+                    style={{
+                      height: `${Math.min(
+                        (value / Math.max(...monthlyValues)) * 100,
+                        100
+                      )}%`,
+                    }}
                   ></div>
                   <div className="text-xs mt-1 text-gray-400">
-                    {months[index] ? format(new Date(months[index]), "MMM") : ""}
+                    {months[index]
+                      ? format(new Date(months[index]), "MMM")
+                      : ""}
                   </div>
                 </div>
               ))
             ) : (
-              <div className="w-full text-center text-gray-400 py-10">No activity data yet</div>
+              <div className="w-full text-center text-gray-400 py-10">
+                No activity data yet
+              </div>
             )}
           </div>
         </CardContent>
@@ -170,7 +192,9 @@ export function Profile() {
                 </div>
                 <div>
                   <div className="font-medium">Week Warrior</div>
-                  <p className="text-sm text-gray-400">Maintained a streak for 7+ days</p>
+                  <p className="text-sm text-gray-400">
+                    Maintained a streak for 7+ days
+                  </p>
                 </div>
               </div>
             )}
@@ -190,5 +214,5 @@ export function Profile() {
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }
