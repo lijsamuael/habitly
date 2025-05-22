@@ -1,6 +1,8 @@
 from datetime import datetime
 from pydantic import BaseModel
 from sqlmodel import SQLModel, Field
+from typing import List, Literal
+
 
 
 class User(SQLModel, table=True):
@@ -42,3 +44,21 @@ class UserResponse(BaseModel):
     id: int
     full_name: str
     email: str
+
+
+#Rest api request format
+FieldType = Literal["str", "int", "float", "bool", "datetime"]
+
+class ModelFieldDefinition(BaseModel):
+    name: str
+    type: FieldType
+    required: bool = True
+    default: str | None = None
+    primary_key: bool = False
+    foreign_key: str | None = None
+
+
+
+class ModelDefinition(BaseModel):
+    name: str
+    fields: List[ModelFieldDefinition]

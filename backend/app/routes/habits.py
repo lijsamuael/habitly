@@ -2,7 +2,7 @@ from typing import Annotated
 from fastapi import Depends, APIRouter
 from fastapi.security import OAuth2PasswordBearer
 from sqlmodel import Session
-from app.models import Habit
+from app.schemas import Habit
 from app.db import get_session
 from app.crud import CRUDBase
 

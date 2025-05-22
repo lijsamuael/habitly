@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException
 from sqlmodel import select
 from app.db import SessionDep
 from app.crud import CRUDBase
-from app.models import Habit, Streak, User
+from app.schemas import Habit, Streak, User
 from fastapi.security import OAuth2PasswordBearer
 from datetime import date, datetime, timedelta
 from sqlalchemy import and_

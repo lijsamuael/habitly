@@ -1,10 +1,10 @@
 from typing import Annotated
 from fastapi import Depends, APIRouter
 from fastapi.security import OAuth2PasswordBearer
-from app.models import User
+from app.schemas import User
 from app.db import SessionDep
 from app.crud import CRUDBase
-from app.utils import get_current_user
+from app.utils import get_current_user, get_password_hash
 user_crud = CRUDBase(User)
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
@@ -23,6 +23,8 @@ def get_all_users(db: SessionDep):
 
 @router.post("/")
 def create_user(user: User, db: SessionDep):
+    hashed_password = get_password_hash(user.password)
+    user.password = hashed_password
     return user_crud.create(db, user)
 
 @router.put("/{user_id}")

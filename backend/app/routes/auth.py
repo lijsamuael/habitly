@@ -1,7 +1,7 @@
 from typing import Annotated
 from fastapi.security import OAuth2PasswordRequestForm
 from fastapi import APIRouter, BackgroundTasks, Depends
-from app.models import Token, User, UserCreate, UserResponse
+from app.schemas import Token, User, UserCreate, UserResponse
 from passlib.context import CryptContext
 from datetime import timedelta
 from app.db import get_session

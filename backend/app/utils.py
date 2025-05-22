@@ -4,7 +4,7 @@ import jwt
 import os
 from pydantic import BaseModel, EmailStr
 from sqlmodel import Session, select
-from app.models import Habit, Streak, User
+from app.schemas import Habit, Streak, User
 from dotenv import load_dotenv
 from fastapi import BackgroundTasks, HTTPException
 from jinja2 import Template
